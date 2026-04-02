@@ -20,7 +20,7 @@
   --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
 
   --font-main: 'Inter', system-ui, -apple-system, sans-serif;
-  --transition-smooth: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+  --transition-smooth: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
 }
 
 * {

@@ -33,7 +33,7 @@ function App() {
     }
   };
 
-  // On app load, check if we have a token and restore the session
+  
   useEffect(() => {
     refreshUser().finally(() => setLoading(false));
   }, []);
@@ -65,7 +65,7 @@ function App() {
       <Routes>
         <Route path="/admin" element={<AdminDashboard user={user} onLogout={handleLogout} />} />
         <Route path="*" element={
-          <Layout user={user} onLogout={handleLogout}>
+          <Layout user={ user } onLogout={handleLogout}>
             <Routes>
               <Route path="/" element={<Home user={user} />} />
               <Route path="/about" element={<About />} />
