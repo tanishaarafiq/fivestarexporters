@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 300 300">
+  <!-- Background Circle -->
+  <circle cx="150" cy="150" r="140" fill="none" stroke="#D4AF37" stroke-width="3"/>
+  
+  <!-- Spiral Leaves Design -->
+  <path d="M150,280 C80,280 30,220 30,150 C30,90 80,40 140,40" 
+        fill="none" stroke="#2E7D32" stroke-width="8" stroke-linecap="round"/>
+  
+  <path d="M150,260 C100,260 60,210 60,150 C60,110 90,80 130,80" 
+        fill="none" stroke="#2E7D32" stroke-width="5" stroke-linecap="round"/>
+
+  <!-- Leaf shapes -->
+  <path d="M140,40 Q160,20 180,40 Q160,60 140,40" fill="#2E7D32"/>
+  <path d="M120,50 Q140,30 160,50 Q140,70 120,50" fill="#2E7D32"/>
+  <path d="M100,70 Q120,50 140,70 Q120,90 100,70" fill="#2E7D32"/>
+
+  <!-- Curve Path for Text -->
+  <defs>
+    <path id="curveTop" d="M 40,150 A 110,110 0 0,1 260,150" />
+  </defs>
+
+  <!-- Main Text: 5 STAR EXPORTERS -->
+  <text width="300" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-weight="bold" font-size="24" fill="#D4AF37">
+    <textPath xlink:href="#curveTop" startOffset="50%">
+      5 STAR EXPORTERS
+    </textPath>
+  </text>
+
+  <!-- Central Swirl / Glimmer -->
+  <circle cx="150" cy="150" r="10" fill="#D4AF37"/>
+
+  <!-- Tagline: Deliver the Naturals -->
+  <text x="150" y="200" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#2E7D32" font-style="italic">
+    Deliver the Naturals
+  </text>
+</svg>

@@ -1,0 +1,148 @@
+.page-header-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+}
+
+.page-header-flex .btn-primary {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.analytics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    margin-bottom: 40px;
+}
+
+.analytics-card {
+    background: var(--color-white);
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.analytics-card.large {
+    grid-column: 1 / -1;
+}
+
+.analytics-card h3 {
+    margin-bottom: 20px;
+    color: var(--color-navy);
+    border-bottom: 1px solid #eee;
+    padding-bottom: 15px;
+}
+
+.mock-line-chart {
+    width: 100%;
+    height: 200px;
+    position: relative;
+}
+
+.line-chart-svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+}
+
+.chart-months {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+    color: #777;
+    font-size: 0.9rem;
+}
+
+.stat-item {
+    margin-bottom: 20px;
+}
+
+.stat-label {
+    display: block;
+    font-weight: 500;
+    margin-bottom: 5px;
+    color: #555;
+}
+
+.progress-bar {
+    height: 10px;
+    background-color: #eee;
+    border-radius: 5px;
+    margin-bottom: 5px;
+    overflow: hidden;
+}
+
+.progress {
+    height: 100%;
+    background-color: var(--color-gold);
+    border-radius: 5px;
+}
+
+.stat-value {
+    font-size: 0.9rem;
+    color: #777;
+}
+
+.pie-chart-simple {
+    width: 150px;
+    height: 150px;
+    margin: 0 auto;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.pie-segment-simple {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+}
+
+.pie-legend-center {
+    z-index: 1;
+    background-color: var(--color-white);
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.pie-legend-center span {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-navy);
+}
+
+.audit-section {
+    background: var(--color-white);
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.audit-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.audit-table th,
+.audit-table td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+.audit-table th {
+    background-color: #f9f9f9;
+    font-weight: 600;
+}
