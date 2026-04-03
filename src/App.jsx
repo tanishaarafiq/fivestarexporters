@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
 import Layout from './components/Layout';
 import ScrollToTop from './components/ScrollToTop';
 import Home from './pages/Home';
@@ -18,7 +18,9 @@ import ResetPassword from './pages/ResetPassword';
 import { authAPI } from './api';
 import './App.css';
 
-function App() {
+// Wrapper component to handle logout with navigation
+function AppWithLogout() {
+  const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -37,7 +39,6 @@ function App() {
     }
   };
 
-  
   useEffect(() => {
     refreshUser().finally(() => setLoading(false));
 
@@ -59,6 +60,7 @@ function App() {
     localStorage.removeItem('fivestar_token');
     localStorage.removeItem('fivestar_user');
     setUser(null);
+    navigate('/login');
   };
 
   if (loading) {
@@ -70,28 +72,32 @@ function App() {
   }
 
   return (
+    <Layout user={user} onLogout={handleLogout}>
+      <Routes>
+        <Route path="/" element={<Home user={user} />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/modules" element={<Modules user={user} />} />
+        <Route path="/catalogue" element={<Catalogue user={user} onCartUpdate={refreshUser} />} />
+        <Route path="/product/:id" element={<ProductDetails onCartUpdate={refreshUser} />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/cart" element={<Cart user={user} onCartUpdate={refreshUser} />} />
+        <Route path="/login" element={<Login onLogin={handleLogin} />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password/:token" element={<ResetPassword />} />
+        <Route path="/dashboard" element={<UserDashboard user={user} />} />
+        <Route path="/reports" element={<Reports user={user} />} />
+      </Routes>
+    </Layout>
+  );
+}
+
+function App() {
+  return (
     <Router>
       <ScrollToTop />
       <Routes>
-        <Route path="/admin" element={<AdminDashboard user={user} onLogout={handleLogout} />} />
-        <Route path="*" element={
-          <Layout user={ user } onLogout={handleLogout}>
-            <Routes>
-              <Route path="/" element={<Home user={user} />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/modules" element={<Modules user={user} />} />
-              <Route path="/catalogue" element={<Catalogue user={user} onCartUpdate={refreshUser} />} />
-              <Route path="/product/:id" element={<ProductDetails onCartUpdate={refreshUser} />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="/cart" element={<Cart user={user} onCartUpdate={refreshUser} />} />
-              <Route path="/login" element={<Login onLogin={handleLogin} />} />
-              <Route path="/forgot-password" element={<ForgotPassword />} />
-              <Route path="/reset-password/:token" element={<ResetPassword />} />
-              <Route path="/dashboard" element={<UserDashboard user={user} />} />
-              <Route path="/reports" element={<Reports user={user} />} />
-            </Routes>
-          </Layout>
-        } />
+        <Route path="/admin" element={<AdminDashboard />} />
+        <Route path="*" element={<AppWithLogout />} />
       </Routes>
     </Router>
   );
