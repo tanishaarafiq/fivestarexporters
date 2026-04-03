@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { LayoutDashboard, ShoppingBag, Users, BarChart2, FileText, Settings, LogOut, TrendingUp, DollarSign, Plus, Edit2, Trash2, MessageSquare, CheckCircle, Mail, MessageCircle, X, Box, AlertTriangle, Moon, Heart, Eye } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { adminAPI } from '../api';
+import { adminAPI, authAPI } from '../api';
 import './AdminDashboard.css';
 
-const AdminDashboard = ({ user, onLogout }) => {
+const AdminDashboard = ({ user: propUser, onLogout: propLogout }) => {
+    const [user, setUser] = useState(propUser);
     const [activeTab, setActiveTab] = useState('overview');
     const [stats, setStats] = useState(null);
     const [allUsers, setAllUsers] = useState([]);
@@ -44,6 +45,28 @@ const AdminDashboard = ({ user, onLogout }) => {
     const [isDarkMode, setIsDarkMode] = useState(localStorage.getItem('fivestar_theme') === 'dark');
 
     const isAdmin = user?.role === 'admin';
+
+    useEffect(() => {
+        if (!propUser) {
+            const token = localStorage.getItem('fivestar_token');
+            if (token) {
+                authAPI.getMe().then(userData => {
+                    setUser(userData);
+                }).catch(() => {
+                    navigate('/login');
+                });
+            } else {
+                navigate('/login');
+            }
+        }
+    }, [propUser, navigate]);
+
+    const handleLogout = () => {
+        localStorage.removeItem('fivestar_token');
+        localStorage.removeItem('fivestar_user');
+        setUser(null);
+        navigate('/login');
+    };
 
     const toggleTheme = (e) => {
         const newTheme = e.target.checked;
@@ -856,7 +879,7 @@ const AdminDashboard = ({ user, onLogout }) => {
                         </>
                     )}
                 </div>
-                <button className="admin-logout" onClick={() => { onLogout(); navigate('/'); }}>
+                <button className="admin-logout" onClick={handleLogout}>
                     <LogOut size={20} /> <span>Logout</span>
                 </button>
             </aside>
