@@ -1,5 +1,5 @@
 import React from 'react';
-import { Facebook, Twitter, Linkedin, Instagram, Mail, Phone, MapPin } from 'lucide-react';
+import { Facebook, Twitter, Linkedin, Instagram, Mail, Phone, MapPin, MessageCircle } from 'lucide-react';
 import './Footer.css';
 import { Link } from 'react-router-dom';
 
@@ -43,12 +43,23 @@ const Footer = () => {
                             </a>
                         </li>
                         <li>
-                            <Phone size={18} className="contact-icon" />
-                            <span>+91 98765 43210</span>
+                            <a href="tel:+917539923567" style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'inherit', textDecoration: 'none' }}>
+                                <Phone size={18} className="contact-icon" />
+                                <span>+91 75399 23567</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="sms:+917539923567" style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'inherit', textDecoration: 'none', opacity: 0.8 }}>
+                                <MessageCircle size={16} className="contact-icon" />
+                                <span style={{ fontSize: '0.85rem' }}>Send a Text Message</span>
+                            </a>
                         </li>
                         <li>
                             <Mail size={18} className="contact-icon" />
-                            <span>info@fivestarexporters.com</span>
+                            <div style={{ display: 'flex', flexDirection: 'column' }}>
+                                <span>fivestarexporterss@gmail.com</span>
+                                <span style={{ fontSize: '0.75rem', opacity: 0.7 }}>Alt: 5starexporters@gmail.com</span>
+                            </div>
                         </li>
                     </ul>
                 </div>

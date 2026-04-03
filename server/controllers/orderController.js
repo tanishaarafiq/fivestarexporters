@@ -1,6 +1,7 @@
 const Order = require('../models/Order');
 const User = require('../models/User');
 const { createLog } = require('../utils/auditHelper');
+const { sendOrderConfirmation } = require('../utils/emailService');
 
 // @desc    Place a new order (checkout)
 // @route   POST /api/orders
@@ -19,6 +20,9 @@ const placeOrder = async (req, res) => {
             totalAmount,
             paymentMethod: paymentMethod || 'COD',
         });
+
+        // Send confirmation email
+        sendOrderConfirmation(req.user.email, order).catch(console.error);
 
         // Audit Log
         await createLog(req, req.user.email, `Placed Order #${order._id.toString().slice(-8).toUpperCase()} (₹${totalAmount})`, 'order');

@@ -13,6 +13,8 @@ import Login from './pages/Login';
 import UserDashboard from './pages/UserDashboard';
 import AdminDashboard from './pages/AdminDashboard';
 import Reports from './pages/Reports';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
 import { authAPI } from './api';
 import './App.css';
 
@@ -26,8 +28,10 @@ function App() {
       try {
         const userData = await authAPI.getMe();
         setUser(userData);
+        localStorage.setItem('fivestar_user', JSON.stringify({ id: userData._id, email: userData.email }));
       } catch (error) {
         localStorage.removeItem('fivestar_token');
+        localStorage.removeItem('fivestar_user');
         setUser(null);
       }
     }
@@ -36,18 +40,24 @@ function App() {
   
   useEffect(() => {
     refreshUser().finally(() => setLoading(false));
+
+    // Initialize Global Theme
+    const isDark = localStorage.getItem('fivestar_theme') === 'dark';
+    if (isDark) document.body.classList.add('dark-theme');
   }, []);
 
   const handleLogin = (userData) => {
     // Save token to localStorage and set user
     if (userData.token) {
       localStorage.setItem('fivestar_token', userData.token);
+      localStorage.setItem('fivestar_user', JSON.stringify({ id: userData._id, email: userData.email }));
     }
     setUser(userData);
   };
 
   const handleLogout = () => {
     localStorage.removeItem('fivestar_token');
+    localStorage.removeItem('fivestar_user');
     setUser(null);
   };
 
@@ -75,6 +85,8 @@ function App() {
               <Route path="/contact" element={<Contact />} />
               <Route path="/cart" element={<Cart user={user} onCartUpdate={refreshUser} />} />
               <Route path="/login" element={<Login onLogin={handleLogin} />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
+              <Route path="/reset-password/:token" element={<ResetPassword />} />
               <Route path="/dashboard" element={<UserDashboard user={user} />} />
               <Route path="/reports" element={<Reports user={user} />} />
             </Routes>

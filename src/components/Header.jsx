@@ -48,9 +48,11 @@ const Header = ({ user, onLogout }) => {
 
           <Link to="/cart" className="icon-link" title="Cart">
             <ShoppingCart size={22} />
-            <span className="badge">
-              {user?.cart?.reduce((acc, item) => acc + item.quantity, 0) || 0}
-            </span>
+            {(user?.cart?.reduce((acc, item) => acc + item.quantity, 0) || 0) > 0 && (
+              <span className="badge cart-badge">
+                {user.cart.reduce((acc, item) => acc + item.quantity, 0)}
+              </span>
+            )}
           </Link>
 
           {user && (

@@ -94,8 +94,8 @@ const Login = ({ onLogin }) => {
                     {error && <p className="error-text" style={{ color: 'red', marginBottom: '10px' }}>{error}</p>}
 
                     {isLogin && (
-                        <div className="forgot-password">
-                            <a href="#">Forgot Password?</a>
+                        <div className="forgot-password" style={{ marginBottom: '15px' }}>
+                            <Link to="/forgot-password" style={{ color: 'var(--color-accent-dark)', fontSize: '0.85rem', fontWeight: '600' }}>Forgot Strategic Password?</Link>
                         </div>
                     )}
 

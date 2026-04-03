@@ -9,32 +9,46 @@ const Home = ({ user }) => {
             {/* Hero Section */}
             <section className="hero-section">
                 <div className="hero-overlay"></div>
-                <div className="container hero-content animate-fade-up">
-                    <h1 className="hero-title">
-                        Precision Engineered Success for Global Powerloom Exports
-                    </h1>
-                    <p className="hero-description">
-                        Empowering Five Star Exporters with a state-of-the-art digital ecosystem for
-                        seamless catalogue integration, real-time enquiry tracking, and global order management.
-                    </p>
-                    <div className="hero-buttons">
-                        <Link to="/catalogue" className="btn btn-primary">Explore Catalogue</Link>
-                        {user ? (
-                            <Link to={user.role === 'admin' ? '/admin' : '/dashboard'} className="btn btn-secondary">Command Center</Link>
-                        ) : (
-                            <Link to="/login" className="btn btn-secondary">Get Started</Link>
-                        )}
-                        <Link to="/contact" className="btn btn-outline">Consult Our Experts</Link>
+                <div className="hero-shape-bg complex-float"></div>
+                <div className="container">
+                    <div className="hero-grid">
+                        <div className="hero-content">
+                            <h1 className="hero-title stagger-1">
+                                Precision Engineered Success for Global Powerloom Exports
+                            </h1>
+                            <p className="hero-description stagger-2">
+                                A state-of-the-art digital platform for seamless catalogue browsing,
+                                real-time enquiry tracking, and global powerloom spare parts order management.
+                            </p>
+                            <div className="hero-buttons stagger-3">
+                                <Link to="/catalogue" className="btn btn-primary neon-glow">Explore Catalogue</Link>
+                                {user ? (
+                                    <Link to={user.role === 'admin' ? '/admin' : '/dashboard'} className="btn btn-secondary">Command Center</Link>
+                                ) : (
+                                    <Link to="/login" className="btn btn-secondary">Get Started</Link>
+                                )}
+                                <Link to="/contact" className="btn btn-outline">Consult Our Experts</Link>
+                            </div>
+                        </div>
+                        <div className="hero-visual animate-zoom">
+                            <div className="visual-container">
+                                <Settings size={280} strokeWidth={0.2} className="visual-gear-bg spin-reverse" />
+                                <Settings size={180} strokeWidth={0.5} className="floating-icon spin-slow" />
+                                <div className="glow-orb complex-float"></div>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div className="hero-visual animate-float">
-                    <Settings size={120} strokeWidth={1} />
                 </div>
             </section>
 
             {/* About Project Section */}
-            <section className="section bg-white">
-                <div className="container">
+            <section className="section section-wrapper vivid-gradient-bg">
+                <div className="bg-drift-container">
+                    <div className="drift-shape" style={{ width: '500px', height: '500px', left: '-10%', top: '0%' }}></div>
+                    <div className="drift-shape" style={{ width: '400px', height: '400px', right: '0%', bottom: '0%', animationDelay: '-8s' }}></div>
+                </div>
+                <div className="scanning-beam"></div>
+                <div className="container" style={{ position: 'relative', zIndex: 2 }}>
                     <div className="animate-fade-up">
                         <h2 className="section-title">Bridging Quality with Global Standards</h2>
                     </div>
@@ -70,8 +84,10 @@ const Home = ({ user }) => {
             </section>
 
             {/* Objectives Section */}
-            <section className="section bg-light">
-                <div className="container">
+            <section className="section bg-light section-wrapper">
+                <div className="neon-grid-bg"></div>
+                <div className="scanning-beam" style={{ animationDelay: '4s' }}></div>
+                <div className="container" style={{ position: 'relative', zIndex: 2 }}>
                     <h2 className="section-title animate-fade-up">Core Strategic Objectives</h2>
                     <div className="objectives-grid">
                         {[
@@ -93,8 +109,13 @@ const Home = ({ user }) => {
             </section>
 
             {/* Tech Stack Section */}
-            <section className="section tech-section text-white">
-                <div className="container">
+            <section className="section tech-section text-white section-wrapper">
+                <div className="bg-drift-container">
+                    <div className="drift-shape" style={{ background: 'radial-gradient(circle, rgba(255, 215, 0, 0.25), transparent 70%)', width: '600px', height: '600px', right: '-10%', top: '-20%' }}></div>
+                    <div className="drift-shape" style={{ width: '450px', height: '450px', left: '-5%', bottom: '-10%', animationDelay: '-12s' }}></div>
+                </div>
+                <div className="scanning-beam" style={{ background: 'linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.05), transparent)' }}></div>
+                <div className="container" style={{ position: 'relative', zIndex: 2 }}>
                     <h2 className="section-title title-white animate-fade-up">Engineered with Precision</h2>
                     <div className="tech-grid">
                         {[
@@ -115,8 +136,10 @@ const Home = ({ user }) => {
             </section>
 
             {/* Modules Overview */}
-            <section className="section bg-white">
-                <div className="container">
+            <section className="section section-wrapper vivid-gradient-bg">
+                 <div className="neon-grid-bg" style={{ backgroundSize: '120px 120px', opacity: 0.4 }}></div>
+                 <div className="scanning-beam" style={{ animationDelay: '2s' }}></div>
+                <div className="container" style={{ position: 'relative', zIndex: 2 }}>
                     <h2 className="section-title animate-fade-up">Operational Ecosystem</h2>
                     <div className="modules-grid-home">
                         {[
@@ -138,15 +161,7 @@ const Home = ({ user }) => {
                 </div>
             </section>
 
-            {/* Consultant Info */}
-            <section className="section consultant-section animate-fade-up">
-                <div className="container">
-                    <div className="consultant-box">
-                        <h2>Strategic Consultant: Five Star Exporters</h2>
-                        <p>Academic Partnership: Dept of CT-PG, Kongu Engineering College</p>
-                    </div>
-                </div>
-            </section>
+
         </div>
     );
 };

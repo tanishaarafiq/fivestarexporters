@@ -3,6 +3,7 @@ const router = express.Router();
 const { getStats, getAllUsers, getAllOrders, updateOrderStatus, getAuditLogs } = require('../controllers/adminController');
 const { createProduct, updateProduct, deleteProduct } = require('../controllers/productController');
 const { getEnquiries, replyToEnquiry } = require('../controllers/enquiryController');
+const { getEngagement } = require('../controllers/engagementController');
 const { protect, isAdmin } = require('../middleware/auth');
 
 // All admin routes require login + admin role
@@ -12,6 +13,7 @@ router.get('/stats', getStats);
 router.get('/users', getAllUsers);
 router.get('/orders', getAllOrders);
 router.get('/audit-logs', getAuditLogs);
+router.get('/engagement', getEngagement);
 router.put('/orders/:id', updateOrderStatus);
 
 // Product management

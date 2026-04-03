@@ -55,8 +55,16 @@ const Contact = () => {
                         <div className="contact-item">
                             <div className="icon-box"><Phone size={24} /></div>
                             <div>
-                                <h3>Global Export Hotlines</h3>
-                                <p>+91 98765 43210 (International Sales)<br />+91 98765 43211 (Technical Support)</p>
+                                <h3>Global Export Hotline</h3>
+                                <p>
+                                    <a href="tel:+917539923567" style={{ color: 'inherit', textDecoration: 'none', fontWeight: 600 }}>
+                                        +91 75399 23567
+                                    </a>
+                                    <br />
+                                    <a href="sms:+917539923567" style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', marginTop: '8px', color: 'var(--color-primary)', textDecoration: 'none', fontWeight: 600, fontSize: '0.9rem' }}>
+                                        <MessageCircle size={16} /> Send a Text Message
+                                    </a>
+                                </p>
                             </div>
                         </div>
 
@@ -64,7 +72,8 @@ const Contact = () => {
                             <div className="icon-box"><Mail size={24} /></div>
                             <div>
                                 <h3>Strategic Communication</h3>
-                                <p>sales@fivestarexporters.com<br />logistics@fivestarexporters.com</p>
+                                <p>fivestarexporterss@gmail.com</p>
+                                <p style={{ fontSize: '0.9rem', color: 'var(--color-text-muted)', marginTop: '5px' }}>Backup: 5starexporters@gmail.com</p>
                             </div>
                         </div>
 

@@ -36,6 +36,18 @@
 .admin-nav {
     padding: 20px 0;
     flex: 1;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255,255,255,0.2) transparent;
+}
+
+.admin-nav::-webkit-scrollbar {
+    width: 6px;
+}
+
+.admin-nav::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.2);
+    border-radius: 10px;
 }
 
 .admin-nav button {
@@ -137,6 +149,11 @@
     margin-bottom: 25px;
     border-bottom: 1px solid #f1f5f9;
     padding-bottom: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
 }
 
 .box-header h2 {

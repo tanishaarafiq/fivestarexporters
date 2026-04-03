@@ -1,3 +1,5 @@
+import { engagementAPI } from '../api';
+
 export const recordProductView = (product) => {
     if (!product || !product.partCode) return;
 
@@ -21,6 +23,11 @@ export const recordProductView = (product) => {
         // Keep only top 10
         const limitedViews = views.slice(0, 10);
         localStorage.setItem(STORAGE_KEY, JSON.stringify(limitedViews));
+
+        // If user is logged in, also record on backend
+        if (localStorage.getItem('fivestar_token')) {
+            engagementAPI.record(product.name, product.partCode, 'viewed').catch(() => {});
+        }
     } catch (error) {
         console.error('Failed to record product view:', error);
     }

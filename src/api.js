@@ -50,6 +50,8 @@ export const authAPI = {
     login: (credentials) => api('/auth/login', { method: 'POST', body: credentials }),
     getMe: () => api('/auth/me'),
     updateProfile: (data) => api('/auth/profile', { method: 'PUT', body: data }),
+    forgotPassword: (email) => api('/auth/forgot-password', { method: 'POST', body: { email } }),
+    resetPassword: (token, password) => api(`/auth/reset-password/${token}`, { method: 'POST', body: { password } }),
 };
 
 // Product APIs
@@ -85,6 +87,12 @@ export const enquiryAPI = {
     getMyEnquiries: () => api('/enquiries/mine'),
 };
 
+// Engagement tracking APIs (logged-in users)
+export const engagementAPI = {
+    record: (productName, partCode, action) =>
+        api('/engagement', { method: 'POST', body: { productName, partCode, action } }),
+};
+
 // Admin APIs
 export const adminAPI = {
     getStats: () => api('/admin/stats'),
@@ -100,6 +108,9 @@ export const adminAPI = {
     replyToEnquiry: (id, reply) => api(`/admin/enquiries/${id}/reply`, { method: 'PUT', body: { reply } }),
     // Audit Logs
     getAuditLogs: () => api('/admin/audit-logs'),
+    // Product Engagement
+    getEngagement: () => api('/admin/engagement'),
 };
 
 export default api;
+

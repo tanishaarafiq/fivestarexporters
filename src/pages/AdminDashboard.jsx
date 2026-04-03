@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { LayoutDashboard, ShoppingBag, Users, BarChart2, FileText, Settings, LogOut, TrendingUp, DollarSign, Plus, Edit2, Trash2, MessageSquare, CheckCircle, Mail, MessageCircle, X, Box } from 'lucide-react';
+import { LayoutDashboard, ShoppingBag, Users, BarChart2, FileText, Settings, LogOut, TrendingUp, DollarSign, Plus, Edit2, Trash2, MessageSquare, CheckCircle, Mail, MessageCircle, X, Box, AlertTriangle, Moon, Heart, Eye } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { adminAPI } from '../api';
 import './AdminDashboard.css';
@@ -12,6 +12,7 @@ const AdminDashboard = ({ user, onLogout }) => {
     const [allProducts, setAllProducts] = useState([]);
     const [allEnquiries, setAllEnquiries] = useState([]);
     const [allAuditLogs, setAllAuditLogs] = useState([]);
+    const [engagementEvents, setEngagementEvents] = useState([]);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
 
@@ -33,13 +34,28 @@ const AdminDashboard = ({ user, onLogout }) => {
     // Settings State
     const [settingsState, setSettingsState] = useState({
         siteName: 'Five Star Exporters',
-        supportEmail: 'support@fivestarexporters.com',
-        phone: '+91 98765 43210',
+        supportEmail: 'fivestarexporterss@gmail.com',
+        phone: '+91 75399 23567',
         notifyOrders: true,
         notifyEnquiries: true,
         twoFactor: false
     });
     const [isSavingSettings, setIsSavingSettings] = useState(false);
+    const [isDarkMode, setIsDarkMode] = useState(localStorage.getItem('fivestar_theme') === 'dark');
+
+    const isAdmin = user?.role === 'admin';
+
+    const toggleTheme = (e) => {
+        const newTheme = e.target.checked;
+        setIsDarkMode(newTheme);
+        if (newTheme) {
+            document.body.classList.add('dark-theme');
+            localStorage.setItem('fivestar_theme', 'dark');
+        } else {
+            document.body.classList.remove('dark-theme');
+            localStorage.removeItem('fivestar_theme');
+        }
+    };
 
     const handleSettingsSave = (e) => {
         e.preventDefault();
@@ -51,14 +67,14 @@ const AdminDashboard = ({ user, onLogout }) => {
     };
 
     useEffect(() => {
-        if (!user || user.role !== 'admin') {
+        if (!user || (user.role !== 'admin' && user.role !== 'sales_rep')) {
             navigate('/login');
         }
     }, [user, navigate]);
 
     // Fetch dashboard stats
     useEffect(() => {
-        if (user && user.role === 'admin') {
+        if (user && (user.role === 'admin' || user.role === 'sales_rep')) {
             const fetchStats = async () => {
                 try {
                     setLoading(true);
@@ -71,12 +87,13 @@ const AdminDashboard = ({ user, onLogout }) => {
                 }
             };
             fetchStats();
+            adminAPI.getEngagement().then(setEngagementEvents).catch(console.error);
         }
     }, [user]);
 
     // Fetch data when tabs change
     useEffect(() => {
-        if (user?.role !== 'admin') return;
+        if (!user || (user.role !== 'admin' && user.role !== 'sales_rep')) return;
 
         if (activeTab === 'customers') {
             adminAPI.getUsers().then(setAllUsers).catch(console.error);
@@ -160,7 +177,7 @@ const AdminDashboard = ({ user, onLogout }) => {
         }
     };
 
-    if (user.role !== 'admin') return null;
+    if (user.role !== 'admin' && user.role !== 'sales_rep') return null;
 
     const renderContent = () => {
         switch (activeTab) {
@@ -262,22 +279,57 @@ const AdminDashboard = ({ user, onLogout }) => {
                             </div>
                         </div>
 
-                        <div className="recent-activity">
-                            <h3>Recent Orders</h3>
-                            {stats?.recentOrders?.length > 0 ? (
-                                <ul className="activity-list">
-                                    {stats.recentOrders.map(order => (
-                                        <li key={order._id}>
-                                            <span className="time">{new Date(order.createdAt).toLocaleDateString()}</span>
-                                            <span className="activity">
-                                                {order.user?.name || 'User'} placed order #{order._id.slice(-6).toUpperCase()} — ₹{order.totalAmount?.toLocaleString('en-IN')} ({order.status})
-                                            </span>
-                                        </li>
-                                    ))}
-                                </ul>
-                            ) : (
-                                <p style={{ padding: '10px' }}>No recent orders.</p>
-                            )}
+
+                        <div className="recent-activity-wrapper" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px', marginTop: '20px' }}>
+                            <div className="recent-activity">
+                                <h3>Recent Orders</h3>
+                                {stats?.recentOrders?.length > 0 ? (
+                                    <ul className="activity-list">
+                                        {stats.recentOrders.map(order => (
+                                            <li key={order._id}>
+                                                <span className="time">{new Date(order.createdAt).toLocaleDateString()}</span>
+                                                <span className="activity">
+                                                    {order.user?.name || 'User'} placed order #{order._id.slice(-6).toUpperCase()} — ₹{order.totalAmount?.toLocaleString('en-IN')} ({order.status})
+                                                </span>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                ) : (
+                                    <p style={{ padding: '10px' }}>No recent orders.</p>
+                                )}
+                            </div>
+                            
+                            <div className="engagement-card" style={{ background: 'var(--color-bg)', border: '1px solid var(--color-border)', borderRadius: '15px', padding: '20px', boxShadow: '0 4px 6px rgba(0,0,0,0.05)' }}>
+                                <h3 style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--color-text)', marginTop: 0 }}>
+                                    <Heart size={20} color="#ef4444" /> Product Engagement Activity
+                                </h3>
+                                {engagementEvents.length === 0 ? (
+                                    <div style={{ textAlign: 'center', padding: '30px 0', color: 'var(--color-text-muted)' }}>
+                                        <Eye size={36} style={{ opacity: 0.3, marginBottom: '10px' }} />
+                                        <p style={{ margin: 0 }}>No engagement recorded yet. Users will appear here as they view and like products.</p>
+                                    </div>
+                                ) : (
+                                    <ul style={{ listStyle: 'none', padding: 0, margin: '15px 0 0' }}>
+                                        {engagementEvents.map((item, idx) => (
+                                            <li key={item._id || idx} style={{ padding: '12px 0', borderBottom: idx < engagementEvents.length - 1 ? '1px solid var(--color-border)' : 'none', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                                <div>
+                                                    <p style={{ margin: '0 0 4px', fontSize: '0.95rem', fontWeight: 600 }}>{item.userName}</p>
+                                                    <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--color-text-muted)', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                                                        {item.action === 'liked'
+                                                            ? <Heart size={14} color="#ef4444" fill="#ef4444" />
+                                                            : <Eye size={14} color="#3b82f6" />
+                                                        }
+                                                        {item.action} <strong>{item.productName}</strong>
+                                                    </p>
+                                                </div>
+                                                <span style={{ fontSize: '0.75rem', color: 'var(--color-text-muted)', whiteSpace: 'nowrap', marginLeft: '10px' }}>
+                                                    {new Date(item.createdAt).toLocaleString('en-IN', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' })}
+                                                </span>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                )}
+                            </div>
                         </div>
                     </div>
                 );
@@ -286,16 +338,18 @@ const AdminDashboard = ({ user, onLogout }) => {
                     <div className="admin-content-box">
                         <div className="box-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
                             <h2>Manage Products ({allProducts.length})</h2>
-                            <button
-                                className="btn btn-primary"
-                                onClick={() => {
-                                    setEditingProduct(null);
-                                    setProductFormData({ name: '', partCode: '', category: 'All', price: '', description: '', image: '' });
-                                    setIsProductModalOpen(true);
-                                }}
-                            >
-                                <Plus size={18} /> Add New Product
-                            </button>
+                            {isAdmin && (
+                                <button
+                                    className="btn btn-primary"
+                                    onClick={() => {
+                                        setEditingProduct(null);
+                                        setProductFormData({ name: '', partCode: '', category: 'All', price: '', description: '', image: '' });
+                                        setIsProductModalOpen(true);
+                                    }}
+                                >
+                                    <Plus size={18} /> Add New Product
+                                </button>
+                            )}
                         </div>
 
                         {isProductModalOpen && (
@@ -386,19 +440,25 @@ const AdminDashboard = ({ user, onLogout }) => {
                                             <td>{product.category}</td>
                                             <td className="price-cell">₹{product.price || 0}</td>
                                             <td className="actions-cell text-right">
-                                                <button className="btn-action-edit" onClick={() => {
-                                                    setEditingProduct(product);
-                                                    setProductFormData({
-                                                        name: product.name,
-                                                        partCode: product.partCode,
-                                                        category: product.category,
-                                                        price: product.price || '',
-                                                        description: product.description || '',
-                                                        image: product.image || ''
-                                                    });
-                                                    setIsProductModalOpen(true);
-                                                }} title="Edit Specifications"><Edit2 size={16} /></button>
-                                                <button className="btn-action-delete" onClick={() => handleProductDelete(product._id)} title="Decommission Item"><Trash2 size={16} /></button>
+                                                {isAdmin ? (
+                                                    <>
+                                                        <button className="btn-action-edit" onClick={() => {
+                                                            setEditingProduct(product);
+                                                            setProductFormData({
+                                                                name: product.name,
+                                                                partCode: product.partCode,
+                                                                category: product.category,
+                                                                price: product.price || '',
+                                                                description: product.description || '',
+                                                                image: product.image || ''
+                                                            });
+                                                            setIsProductModalOpen(true);
+                                                        }} title="Edit Specifications"><Edit2 size={16} /></button>
+                                                        <button className="btn-action-delete" onClick={() => handleProductDelete(product._id)} title="Decommission Item"><Trash2 size={16} /></button>
+                                                    </>
+                                                ) : (
+                                                    <span style={{ fontSize: '0.8rem', color: '#94a3b8' }}>View Only</span>
+                                                )}
                                             </td>
                                         </tr>
                                     ))}
@@ -444,6 +504,7 @@ const AdminDashboard = ({ user, onLogout }) => {
                                                         className="status-select-premium"
                                                         value={order.status}
                                                         onChange={(e) => handleStatusChange(order._id, e.target.value)}
+                                                        disabled={!isAdmin}
                                                     >
                                                         <option value="Processing">Processing</option>
                                                         <option value="Confirmed">Confirmed</option>
@@ -715,6 +776,23 @@ const AdminDashboard = ({ user, onLogout }) => {
                                     </label>
                                 </div>
                             </div>
+                            
+                            <div className="settings-card">
+                                <div className="card-header">
+                                    <div className="icon-wrapper" style={{ background: '#f5f3ff', color: '#8b5cf6' }}><Moon size={20} /></div>
+                                    <h3>Appearance</h3>
+                                </div>
+                                <div className="setting-group toggle-group">
+                                    <div className="toggle-info">
+                                        <label>Dark Mode</label>
+                                        <span>Apply an eye-friendly dark theme system-wide</span>
+                                    </div>
+                                    <label className="switch">
+                                        <input type="checkbox" checked={isDarkMode} onChange={toggleTheme} />
+                                        <span className="slider round"></span>
+                                    </label>
+                                </div>
+                            </div>
 
                             <div className="settings-footer">
                                 <p className="footer-note">* Core configuration changes may require up to 5 minutes to propagate across edges.</p>
@@ -744,10 +822,11 @@ const AdminDashboard = ({ user, onLogout }) => {
                         <LayoutDashboard size={20} /> <span>Overview</span>
                     </button>
                     <button className={activeTab === 'products' ? 'active' : ''} onClick={() => setActiveTab('products')}>
-                        <ShoppingBag size={20} /> <span>Spare Parts</span>
+                        <Box size={20} /> <span>Product Catalogue</span>
                     </button>
                     <button
                         className={isProductModalOpen ? 'active' : ''}
+                        style={{ background: 'rgba(255, 215, 0, 0.1)', margin: '10px 15px', borderRadius: '10px', width: 'auto', border: '1px dashed var(--color-accent)' }}
                         onClick={() => {
                             setEditingProduct(null);
                             setProductFormData({ name: '', partCode: '', category: 'All', price: '', description: '', image: '' });
@@ -755,7 +834,7 @@ const AdminDashboard = ({ user, onLogout }) => {
                             setIsProductModalOpen(true);
                         }}
                     >
-                        <Plus size={18} /> <span>Add New Item</span>
+                        <Plus size={18} /> <span>Onboard New Item</span>
                     </button>
                     <button className={activeTab === 'orders' ? 'active' : ''} onClick={() => setActiveTab('orders')}>
                         <ShoppingBag size={20} /> <span>Orders</span>
@@ -766,12 +845,16 @@ const AdminDashboard = ({ user, onLogout }) => {
                     <button className={activeTab === 'enquiries' ? 'active' : ''} onClick={() => setActiveTab('enquiries')}>
                         <MessageSquare size={20} /> <span>Enquiries</span>
                     </button>
-                    <button className={activeTab === 'audit' ? 'active' : ''} onClick={() => setActiveTab('audit')}>
-                        <FileText size={20} /> <span>Audit Log</span>
-                    </button>
-                    <button className={activeTab === 'settings' ? 'active' : ''} onClick={() => setActiveTab('settings')}>
-                        <Settings size={20} /> <span>Settings</span>
-                    </button>
+                    {isAdmin && (
+                        <>
+                            <button className={activeTab === 'audit' ? 'active' : ''} onClick={() => setActiveTab('audit')}>
+                                <FileText size={20} /> <span>Audit Log</span>
+                            </button>
+                            <button className={activeTab === 'settings' ? 'active' : ''} onClick={() => setActiveTab('settings')}>
+                                <Settings size={20} /> <span>Settings</span>
+                            </button>
+                        </>
+                    )}
                 </div>
                 <button className="admin-logout" onClick={() => { onLogout(); navigate('/'); }}>
                     <LogOut size={20} /> <span>Logout</span>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { User, Package, MessageSquare, ShoppingCart, LogOut, CreditCard, Edit2, Save, Eye, History, ArrowRight, Heart } from 'lucide-react';
+import { User, Package, MessageSquare, ShoppingCart, LogOut, CreditCard, Edit2, Save, Eye, History, ArrowRight, Heart, Calculator, Moon, RefreshCcw, Box } from 'lucide-react';
 import { orderAPI, authAPI } from '../api';
 import { getRecentViews, clearRecentViews } from '../utils/recentViews';
 import { getWishlistItems, toggleWishlist } from '../utils/wishlist';
@@ -15,12 +15,34 @@ const UserDashboard = ({ user }) => {
     const [enquiriesLoading, setEnquiriesLoading] = useState(false);
     const [recentProducts, setRecentProducts] = useState([]);
     const [wishlistItems, setWishlistItems] = useState([]);
+    const [isDarkMode, setIsDarkMode] = useState(localStorage.getItem('fivestar_theme') === 'dark');
+    const [cbmData, setCbmData] = useState({ length: '', width: '', height: '', quantity: '1' });
     const [profileData, setProfileData] = useState({
         name: user ? user.name : "Guest User",
         email: user ? user.email : "guest@example.com",
         phone: user ? (user.phone || "") : "",
         company: user ? (user.company || "") : ""
     });
+
+    const toggleTheme = (e) => {
+        const newTheme = e.target.checked;
+        setIsDarkMode(newTheme);
+        if (newTheme) {
+            document.body.classList.add('dark-theme');
+            localStorage.setItem('fivestar_theme', 'dark');
+        } else {
+            document.body.classList.remove('dark-theme');
+            localStorage.removeItem('fivestar_theme');
+        }
+    };
+
+    const calculateCBM = () => {
+        const l = parseFloat(cbmData.length) || 0;
+        const w = parseFloat(cbmData.width) || 0;
+        const h = parseFloat(cbmData.height) || 0;
+        const q = parseInt(cbmData.quantity) || 1;
+        return ((l * w * h) / 1000000) * q;
+    };
 
     const onLogoutRequested = () => {
         // Find handleLogout from props or parent context if possible
@@ -176,6 +198,22 @@ const UserDashboard = ({ user }) => {
                                     placeholder="Enter your company name"
                                 />
                             </div>
+                            
+                            <div className="settings-section" style={{ gridColumn: '1 / -1', marginTop: '20px', padding: '20px', background: 'var(--color-bg)', borderRadius: '15px' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                        <Moon size={20} color="var(--color-primary-dark)" />
+                                        <div>
+                                            <h4 style={{ margin: 0, color: 'var(--color-text)' }}>Dark Mode Appearance</h4>
+                                            <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--color-text-muted)' }}>Switch to dark colors for better visibility at night.</p>
+                                        </div>
+                                    </div>
+                                    <label className="switch">
+                                        <input type="checkbox" checked={isDarkMode} onChange={toggleTheme} />
+                                        <span className="slider round"></span>
+                                    </label>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 );
@@ -197,6 +235,7 @@ const UserDashboard = ({ user }) => {
                                             <th>Status</th>
                                             <th>Amount</th>
                                             <th>Items</th>
+                                            <th>Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -211,6 +250,11 @@ const UserDashboard = ({ user }) => {
                                                 </td>
                                                 <td>₹{order.totalAmount?.toLocaleString('en-IN')}</td>
                                                 <td>{order.items?.length || 0} items</td>
+                                                <td>
+                                                    <button className="btn-text-only" onClick={() => alert('Order configuration pre-filled and sent to admin for a new quote.')} style={{ color: 'var(--color-primary)', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                                                        <RefreshCcw size={14} /> Request Quote
+                                                    </button>
+                                                </td>
                                             </tr>
                                         ))}
                                     </tbody>
@@ -336,6 +380,70 @@ const UserDashboard = ({ user }) => {
                         )}
                     </div>
                 );
+            case 'calculator':
+                const totalCbm = calculateCBM();
+                const container20ftMax = 33;
+                const container40ftMax = 76;
+                const pct20 = Math.min((totalCbm / container20ftMax) * 100, 100).toFixed(1);
+                const pct40 = Math.min((totalCbm / container40ftMax) * 100, 100).toFixed(1);
+
+                return (
+                    <div className="dashboard-content-box">
+                        <div className="box-header">
+                            <h2>CBM Container Calculator</h2>
+                            <p className="subtitle">Plan your logistics effectively by estimating container load</p>
+                        </div>
+                        <div className="cbm-form" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '15px', marginBottom: '30px' }}>
+                            <div className="form-group">
+                                <label>Length (cm)</label>
+                                <input type="number" value={cbmData.length} onChange={(e) => setCbmData({...cbmData, length: e.target.value})} placeholder="0" />
+                            </div>
+                            <div className="form-group">
+                                <label>Width (cm)</label>
+                                <input type="number" value={cbmData.width} onChange={(e) => setCbmData({...cbmData, width: e.target.value})} placeholder="0" />
+                            </div>
+                            <div className="form-group">
+                                <label>Height (cm)</label>
+                                <input type="number" value={cbmData.height} onChange={(e) => setCbmData({...cbmData, height: e.target.value})} placeholder="0" />
+                            </div>
+                            <div className="form-group">
+                                <label>Quantity</label>
+                                <input type="number" value={cbmData.quantity} onChange={(e) => setCbmData({...cbmData, quantity: e.target.value})} min="1" />
+                            </div>
+                        </div>
+                        
+                        <div className="cbm-results" style={{ background: '#f8fafc', padding: '30px', borderRadius: '20px', border: '1px solid #f1f5f9' }}>
+                            <div className="cbm-total-card" style={{ marginBottom: '30px', textAlign: 'center' }}>
+                                <h3 style={{ margin: '0 0 10px', color: 'var(--color-primary-dark)' }}>Total Order Volume</h3>
+                                <div className="large-cbm" style={{ fontSize: '3rem', fontWeight: 900, color: 'var(--color-primary)' }}>
+                                    {totalCbm.toFixed(3)} <span style={{ fontSize: '1.2rem', color: '#64748b' }}>CBM (m³)</span>
+                                </div>
+                            </div>
+                            
+                            <div className="container-visualizer">
+                                <div style={{ marginBottom: '20px' }}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
+                                        <h4 style={{ margin: 0 }}>20FT Container (33 CBM Max)</h4>
+                                        <span style={{ fontWeight: 800, color: pct20 > 90 ? '#ef4444' : 'var(--color-primary)' }}>{pct20}%</span>
+                                    </div>
+                                    <div style={{ width: '100%', background: '#e2e8f0', height: '24px', borderRadius: '12px', overflow: 'hidden' }}>
+                                        <div style={{ width: `${pct20}%`, background: pct20 > 90 ? '#ef4444' : 'var(--color-primary)', height: '100%', transition: 'width 0.5s ease' }}></div>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
+                                        <h4 style={{ margin: 0 }}>40FT HQ Container (76 CBM Max)</h4>
+                                        <span style={{ fontWeight: 800, color: pct40 > 90 ? '#ef4444' : 'var(--color-primary)' }}>{pct40}%</span>
+                                    </div>
+                                    <div style={{ width: '100%', background: '#e2e8f0', height: '24px', borderRadius: '12px', overflow: 'hidden' }}>
+                                        <div style={{ width: `${pct40}%`, background: pct40 > 90 ? '#ef4444' : 'var(--color-primary)', height: '100%', transition: 'width 0.5s ease' }}></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                );
             default:
                 return null;
         }
@@ -382,6 +490,12 @@ const UserDashboard = ({ user }) => {
                             onClick={() => setActiveTab('wishlist')}
                         >
                             <Heart size={20} /> Wishlist
+                        </button>
+                        <button
+                            className={activeTab === 'calculator' ? 'active' : ''}
+                            onClick={() => setActiveTab('calculator')}
+                        >
+                            <Calculator size={20} /> CBM Calculator
                         </button>
                         <button className="logout-btn" onClick={onLogoutRequested}>
                             <LogOut size={20} /> Logout
