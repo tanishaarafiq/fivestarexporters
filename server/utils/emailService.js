@@ -34,7 +34,7 @@ const sendWelcomeEmail = async (userEmail, userName) => {
                             <li>✅ Place international orders with seamless logistics.</li>
                         </ul>
                         <div style="text-align: center; margin: 30px 0;">
-                            <a href="http://localhost:5175/login" style="background: #0056b3; color: #fff; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold;">Login to Your Dashboard</a>
+                            <a href="${process.env.FRONTEND_URL}/login" style="background: #0056b3; color: #fff; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold;">Login to Your Dashboard</a>
                         </div>
                         <p>If you have any technical queries, feel free to contact our support team at <a href="mailto:fivestarexporterss@gmail.com">fivestarexporterss@gmail.com</a>.</p>
                         <br>
@@ -78,7 +78,7 @@ const sendOrderConfirmation = async (userEmail, order) => {
                         
                         <p>Our quality assurance team will perform a final stress test on your spare parts prior to containerization.</p>
                         <div style="text-align: center; margin: 30px 0;">
-                            <a href="http://localhost:5175/dashboard" style="background: #0056b3; color: #fff; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold;">Track My Order</a>
+                            <a href="${process.env.FRONTEND_URL}/dashboard" style="background: #0056b3; color: #fff; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold;">Track My Order</a>
                         </div>
                         <p>For logistics or tracking updates, contact our freight directorate at <a href="mailto:fivestarexporterss@gmail.com">fivestarexporterss@gmail.com</a>.</p>
                     </div>

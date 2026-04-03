@@ -4,7 +4,7 @@ const testAuth = async () => {
 
     try {
         console.log('Testing Registration...');
-        const regRes = await fetch('http://localhost:5000/api/auth/register', {
+        const regRes = await fetch('https://fivestarexporters-api.onrender.com/api/auth/register', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -20,7 +20,7 @@ const testAuth = async () => {
         console.log('✅ Registration Successful:', regData.email);
 
         console.log('Testing Login...');
-        const loginRes = await fetch('http://localhost:5000/api/auth/login', {
+        const loginRes = await fetch('https://fivestarexporters-api.onrender.com/api/auth/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, password })
