@@ -91,12 +91,53 @@ function AppWithLogout() {
   );
 }
 
+// Admin route component with user state
+function AdminRoute() {
+  const navigate = useNavigate();
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const token = localStorage.getItem('fivestar_token');
+    if (token) {
+      authAPI.getMe().then(userData => {
+        if (userData.role === 'admin') {
+          setUser(userData);
+        } else {
+          navigate('/dashboard');
+        }
+      }).catch(() => {
+        navigate('/login');
+      }).finally(() => setLoading(false));
+    } else {
+      navigate('/login');
+    }
+  }, [navigate]);
+
+  const handleLogout = () => {
+    localStorage.removeItem('fivestar_token');
+    localStorage.removeItem('fivestar_user');
+    setUser(null);
+    navigate('/login');
+  };
+
+  if (loading) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', background: '#0A192F', color: '#FFD700', fontSize: '1.2rem' }}>
+        Loading...
+      </div>
+    );
+  }
+
+  return <AdminDashboard user={user} onLogout={handleLogout} />;
+}
+
 function App() {
   return (
     <Router>
       <ScrollToTop />
       <Routes>
-        <Route path="/admin" element={<AdminDashboard />} />
+        <Route path="/admin" element={<AdminRoute />} />
         <Route path="*" element={<AppWithLogout />} />
       </Routes>
     </Router>
